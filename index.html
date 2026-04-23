@@ -1,0 +1,101 @@
+# Documentação Gamificada de Código — Brainstorm
+
+## Ideia inicial
+
+Transformar código em documentações gamificadas. O código e seu funcionamento se tornam gamificados para explicar para qualquer pessoa.
+
+---
+
+## Incrementos e direções propostas
+
+### Mecânicas de gamificação aplicáveis a código
+
+A ideia ganha força quando você mapeia conceitos de código para mecânicas de jogo específicas, não só "adicionar pontos":
+
+- **Quest system**: cada fluxo de negócio (ex: "processar pagamento PIX") vira uma missão com objetivo, pré-requisitos e recompensa de conhecimento ao final
+- **Skill tree**: dependências entre microserviços viram uma árvore de habilidades que o "jogador" desbloqueia na ordem correta
+- **Boss fights**: pontos críticos do código (transações distribuídas, race conditions, circuit breakers) viram chefes com "mecânicas" que você precisa entender para derrotar
+- **NPCs**: cada serviço/classe importante vira um personagem com personalidade, falas e função no "mundo"
+- **Dungeons**: fluxos end-to-end (ex: checkout BNPL) viram masmorras com salas sequenciais representando cada etapa
+
+### Camadas de audiência
+
+"Qualquer pessoa" é ambicioso. Sugestão: três níveis de profundidade no mesmo material.
+
+1. **Modo história** (não-técnico): metáforas puras, foco no "porquê" e no fluxo de valor
+2. **Modo aventureiro** (dev júnior/onboarding): mistura narrativa com trechos de código reais
+3. **Modo speedrun** (dev sênior): atalhos diretos para arquitetura, decisões técnicas e trade-offs
+
+### Geração automatizada
+
+Pipeline com Claude Code + MCPs:
+
+- Parser AST extrai estrutura (classes, endpoints, dependências)
+- Claude gera narrativa a partir de PRDs + código + comentários
+- Output em formato jogável (Twine, Ink, ou MDX custom com componentes React)
+- Atualização incremental via git hooks quando o código muda
+
+---
+
+## Decisões tomadas
+
+- **Escopo inicial**: uso interno na Koin, com potencial de virar side project se der certo
+- **Piloto**: um projeto da Koin atualmente em desenvolvimento
+- **Formato de saída**: web interativa
+
+---
+
+## Formato de saída — recomendação
+
+Web interativa é a escolha certa para adoção ampla, **mas não deve ser um "jogo" de verdade**. Deve ser uma **documentação com camadas interativas**.
+
+- **Jogo real** (Godot, Phaser, Visual Novel engine): alta fricção, parece brinquedo, difícil de manter, dev sênior abandona em 30 segundos
+- **Doc interativo gamificado** (MDX + React + componentes narrativos): baixa fricção, roda no navegador, versionável em git, escalável
+
+Referência mental: **"But what is a Neural Network?" do 3Blue1Brown + "Learn You a Haskell" + Docusaurus**. Não é um jogo — é documentação que usa progressão, personagens e descoberta como *técnicas pedagógicas*.
+
+### Stack proposta
+
+- **Docusaurus ou Nextra** como base (markdown-first, fácil de versionar, devs já conhecem)
+- **MDX** para intercalar narrativa com componentes React
+- Componentes custom tipo `<Quest>`, `<BossFight>`, `<NPC>`, `<CodeReveal>`, `<DecisionPoint>`
+- **Mermaid** para diagramas de arquitetura estilizados como "mapa do mundo"
+- **Shiki** para syntax highlighting com anotações narrativas ("este `if` é a armadilha que o dragão usa")
+- Deploy interno via S3 + CloudFront ou GitHub Pages privado
+
+**Por que isso vira adoção**: o dev sênior consegue `Cmd+F` e achar o que precisa sem passar pela narrativa. O júnior entra no "modo aventureiro". O PM entra no "modo história". Mesmo artefato, três leituras.
+
+---
+
+## Universo narrativo sugerido
+
+**"O Reino de Koin"** — uma cidade medieval onde cada microserviço é uma guilda, construção ou personagem:
+
+- PIX → "Mensageiro Instantâneo"
+- BNPL → "Guilda dos Mercadores de Promessas"
+- Circuit breakers → "Guardiões das Muralhas"
+- DLQs → "O Cemitério de Cartas Perdidas"
+
+Consistente com estética dark fantasy medieval e dá coesão entre docs de serviços diferentes.
+
+---
+
+## Próximos passos
+
+1. Definir qual projeto da Koin será o piloto
+2. Compartilhar material do projeto (PRD, endpoints principais, fluxo de negócio, estrutura)
+3. Protótipo de **uma única página MDX** com 2-3 componentes custom, mostrando como ficaria o primeiro "capítulo"
+4. A partir do feedback, definir template reutilizável e pipeline de geração
+
+### Material necessário para o protótipo
+
+- Estrutura do projeto (camadas, pacotes principais)
+- Fluxo de negócio principal (ponta a ponta)
+- Endpoints ou casos de uso centrais
+- Documentação existente (PRD, README, ADRs)
+
+### Formas de compartilhar
+
+- Conectar GitHub via configurações de conectores do Claude
+- Colar código/estrutura diretamente no chat
+- Upload de arquivos no chat
