@@ -1,101 +1,378 @@
-# Documentação Gamificada de Código — Brainstorm
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>API Crédito iFood x Koin - Documentação HTML</title>
+<style>
+:root {
+  --bg: #0b1020;
+  --panel: #121933;
+  --panel-2: #0f1530;
+  --text: #ecf1ff;
+  --muted: #b4bfdc;
+  --line: #2a3564;
+  --accent: #7cc7ff;
+  --green: #25c26e;
+  --yellow: #f0b429;
+  --red: #ef6b73;
+  --bluepill: #1d4ed8;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Inter, Segoe UI, Arial, sans-serif;
+  background: linear-gradient(180deg, #0b1020, #121933);
+  color: var(--text);
+}
+a { color: var(--accent); text-decoration: none; }
+.container { display: grid; grid-template-columns: 310px 1fr; min-height: 100vh; }
+.sidebar {
+  position: sticky; top: 0; height: 100vh; overflow: auto;
+  background: rgba(8,12,26,.9); border-right: 1px solid var(--line); padding: 24px 18px;
+}
+.brand h1 { font-size: 22px; margin: 0 0 6px; }
+.brand p { color: var(--muted); margin: 0 0 16px; line-height: 1.4; }
+.server {
+  display:inline-block; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--panel); color: var(--muted); font-size: 12px; word-break: break-all;
+}
+.nav-group { margin-top: 24px; }
+.nav-group h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 10px; }
+.nav-item { display:block; padding: 10px 12px; border: 1px solid transparent; border-radius: 10px; margin-bottom: 8px; background: transparent; }
+.nav-item:hover { background: #0d1430; border-color: var(--line); }
+.main { padding: 28px; }
+.hero {
+  background: linear-gradient(180deg, rgba(124,199,255,.08), rgba(124,199,255,.03));
+  border: 1px solid var(--line); border-radius: 18px; padding: 24px; margin-bottom: 24px;
+}
+.hero h2 { margin: 0 0 10px; font-size: 30px; }
+.hero p { color: var(--muted); line-height: 1.6; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+}
+.card h4 { margin: 0 0 8px; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+.card .value { font-size: 20px; font-weight: 700; }
+.section-title { margin: 28px 0 14px; font-size: 24px; }
+.endpoint {
+  background: rgba(18,25,51,.88); border: 1px solid var(--line); border-radius: 18px; margin-bottom: 20px; overflow: hidden;
+}
+.endpoint-header { padding: 18px 20px; border-bottom: 1px solid var(--line); }
+.method {
+  display:inline-block; min-width: 62px; text-align:center; padding: 7px 10px; border-radius: 999px;
+  font-size: 12px; font-weight: 800; letter-spacing: .05em; margin-right: 10px;
+}
+.method.GET { background:#11315f; color:#8fc5ff; }
+.method.POST { background:#133d23; color:#8cf0b3; }
+.path { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 20px; word-break: break-all; }
+.summary { margin-top: 12px; font-size: 18px; }
+.desc { color: var(--muted); line-height: 1.6; white-space: pre-line; margin-top: 10px; }
+.content-block { padding: 18px 20px; border-top: 1px solid rgba(42,53,100,.55); }
+.content-block h5 { margin: 0 0 12px; font-size: 16px; }
+pre {
+  margin: 0; white-space: pre-wrap; word-break: break-word; overflow:auto;
+  background: #0a0f22; color: #dde7ff; border: 1px solid var(--line); border-radius: 14px; padding: 16px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.55;
+}
+table {
+  width: 100%; border-collapse: collapse; background: #0a0f22; border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+}
+th, td { border-bottom: 1px solid var(--line); padding: 10px 12px; text-align: left; vertical-align: top; font-size: 14px; }
+th { color: var(--muted); background: #0e1530; position: sticky; top: 0; }
+td code { background:#101937; padding:2px 6px; border-radius:6px; }
+.resp { margin-bottom: 16px; }
+.badge {
+  display:inline-block; padding: 5px 8px; border-radius: 999px; border:1px solid var(--line); font-size:12px; font-weight:700;
+}
+.badge.ok { color:#8cf0b3; background:#133d23; }
+.badge.err { color:#ffd2d5; background:#4a1720; }
+.schema-box { margin-bottom: 18px; }
+.small { font-size: 12px; color: var(--muted); }
+@media (max-width: 980px) {
+  .container { grid-template-columns: 1fr; }
+  .sidebar { position: relative; height: auto; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <aside class="sidebar">
+    <div class="brand">
+      <h1>API Crédito iFood x Koin</h1>
+      <p>Documentação HTML gerada a partir do OpenAPI.<br>Versão 10.0.0</p>
+      <div class="server">https://api.exemplo.com</div>
+    </div>
+<div class="nav-group"><h3>Credit Analysis</h3><div class="small" style="margin-bottom:8px;">Operações de análise de limite de crédito</div><a class="nav-item" href="#post-v1-credit-card-limit-analysis"><span class="method POST" style="margin-right:8px;">POST</span><div style="margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;">/v1/credit-card-limit-analysis</div><div class="small" style="margin-top:6px;">Realiza análise de limite de crédito</div></a></div><div class="nav-group"><h3>Webhooks</h3><div class="small" style="margin-bottom:8px;">Webhooks e integrações entre iFood e Koin</div><a class="nav-item" href="#post-v1-webhooks-koin-credit-limit-acceptance"><span class="method POST" style="margin-right:8px;">POST</span><div style="margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;">/v1/webhooks/koin/credit-limit-acceptance</div><div class="small" style="margin-top:6px;">Ifood -&gt; Koin: Webhook Recebe confirmação de aceite de limite</div></a><a class="nav-item" href="#post-v1-webhooks-ifood-tem-que-criar-uma-api-credit-limit-acceptance"><span class="method POST" style="margin-right:8px;">POST</span><div style="margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;">/v1/webhooks/ifood_tem_que_criar_uma_api/credit-limit-acceptance</div><div class="small" style="margin-top:6px;">Koin -&gt; Ifood: JOB - Webhook recálculo de limite de crédito</div></a><a class="nav-item" href="#post-v1-webhooks-koin-recalculation-confirmation"><span class="method POST" style="margin-right:8px;">POST</span><div style="margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;">/v1/webhooks/koin/recalculation-confirmation</div><div class="small" style="margin-top:6px;">Ifood -&gt; Koin: Confirma o recálculo de limite</div></a><a class="nav-item" href="#post-v1-webhooks-ifood-tem-que-criar-uma-api-new-credit-applied"><span class="method POST" style="margin-right:8px;">POST</span><div style="margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;">/v1/webhooks/ifood_tem_que_criar_uma_api/new-credit-applied</div><div class="small" style="margin-top:6px;">Ifood -&gt; Koin: Webhook de aceite de novo limite aplicado</div></a></div><div class="nav-group"><h3>Credit Limit Query</h3><div class="small" style="margin-bottom:8px;">Consulta de limite de crédito</div><a class="nav-item" href="#get-v1-credit-limit"><span class="method GET" style="margin-right:8px;">GET</span><div style="margin-top:8px;font-family:ui-monospace,monospace;font-size:12px;">/v1/credit-limit</div><div class="small" style="margin-top:6px;">Consulta limite por identificador do limite</div></a></div>
+    <div class="nav-group">
+      <h3>Schemas</h3>
+<a class="nav-item" href="#schema-creditlimitanalysisrequest"><code>CreditLimitAnalysisRequest</code></a><a class="nav-item" href="#schema-payload"><code>Payload</code></a><a class="nav-item" href="#schema-device"><code>Device</code></a><a class="nav-item" href="#schema-location"><code>Location</code></a><a class="nav-item" href="#schema-details"><code>Details</code></a><a class="nav-item" href="#schema-birthdate"><code>BirthDate</code></a><a class="nav-item" href="#schema-phonedetail"><code>PhoneDetail</code></a><a class="nav-item" href="#schema-addressdetail"><code>AddressDetail</code></a><a class="nav-item" href="#schema-documentdetail"><code>DocumentDetail</code></a><a class="nav-item" href="#schema-partnerlimitbase"><code>PartnerLimitBase</code></a><a class="nav-item" href="#schema-creditlimitresponse"><code>CreditLimitResponse</code></a><a class="nav-item" href="#schema-creditlimitacceptancerequest"><code>CreditLimitAcceptanceRequest</code></a><a class="nav-item" href="#schema-recalculationconfirmationrequest"><code>RecalculationConfirmationRequest</code></a><a class="nav-item" href="#schema-genericasyncresponse"><code>GenericAsyncResponse</code></a><a class="nav-item" href="#schema-errorresponse"><code>ErrorResponse</code></a>
+    </div>
+  </aside>
+  <main class="main">
+    <section class="hero">
+      <h2>Visão geral</h2>
+      <p>OpenAPI consolidado das APIs de análise, aceite, recálculo, consulta e confirmação
+de recálculo de limite de crédito entre iFood e Koin.</p>
+      <div class="grid">
+        <div class="card"><h4>Base URL</h4><div class="value">https://api.exemplo.com</div></div>
+        <div class="card"><h4>Versão</h4><div class="value">10.0.0</div></div>
+        <div class="card"><h4>Endpoints</h4><div class="value">6</div></div>
+        <div class="card"><h4>Schemas</h4><div class="value">15</div></div>
+      </div>
+    </section>
 
-## Ideia inicial
+    <h3 class="section-title">Endpoints</h3>
 
-Transformar código em documentações gamificadas. O código e seu funcionamento se tornam gamificados para explicar para qualquer pessoa.
+    <section class="endpoint" id="post-v1-credit-card-limit-analysis">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="path">/v1/credit-card-limit-analysis</span>
+        <div class="summary">Realiza análise de limite de crédito</div>
+        <div class="desc">Recebe os dados cadastrais, o identificador do grupo/produto (cluster) e os dados
+de dispositivo do cliente, executa a análise de limite de crédito e retorna os
+campos de limite necessários para integração e persistência na base da Dock e no
+domínio parceiro/Koin.</div>
+      </div>
+    <div class="content-block"><h5>Request</h5><div class="schema-box"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>payload</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.external_id</code></td><td>string (uuid)</td><td>Sim</td><td>Identificador externo/correlação da operação no parceiro</td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>payload.cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>payload.device</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.device.ipv4</code></td><td>string</td><td>Sim</td><td></td><td>&quot;191.68.161.66&quot;</td></tr><tr><td><code>payload.device.location</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.device.location.latitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.device.location.longitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.device.merchantDevice</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.details</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.email</code></td><td>string (email)</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.firstName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.lastName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate.day</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate.month</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate.year</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.phoneDetail</code></td><td>array</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.phoneDetail[].type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;MOBILE&quot;</td></tr><tr><td><code>payload.details.phoneDetail[].areaCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11&quot;</td></tr><tr><td><code>payload.details.phoneDetail[].number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;983764789&quot;</td></tr><tr><td><code>payload.details.addressDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.street</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.number</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.neighborhood</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.complement</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.city</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.state</code></td><td>string</td><td>Sim</td><td></td><td>&quot;SP&quot;</td></tr><tr><td><code>payload.details.addressDetail.zipCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11065-050&quot;</td></tr><tr><td><code>payload.details.addressDetail.countryCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr><tr><td><code>payload.details.documentDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.documentDetail.type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;CPF&quot;</td></tr><tr><td><code>payload.details.documentDetail.number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;76892051006&quot;</td></tr><tr><td><code>payload.details.documentDetail.nationality</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr></tbody></table></div><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;payload&quot;: {
+    &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;,
+    &quot;cluster&quot;: &quot;IFOOD_BNPL&quot;,
+    &quot;device&quot;: {
+      &quot;ipv4&quot;: &quot;191.68.161.66&quot;,
+      &quot;location&quot;: {
+        &quot;latitude&quot;: null,
+        &quot;longitude&quot;: null
+      },
+      &quot;merchantDevice&quot;: null
+    },
+    &quot;details&quot;: {
+      &quot;email&quot;: &quot;76892051006@gmail.com&quot;,
+      &quot;firstName&quot;: &quot;ELIAS&quot;,
+      &quot;lastName&quot;: &quot;BLANCO SILVA&quot;,
+      &quot;birthDate&quot;: {
+        &quot;day&quot;: 28,
+        &quot;month&quot;: 6,
+        &quot;year&quot;: 1981
+      },
+      &quot;phoneDetail&quot;: [
+        {
+          &quot;type&quot;: &quot;MOBILE&quot;,
+          &quot;areaCode&quot;: &quot;11&quot;,
+          &quot;number&quot;: &quot;983764789&quot;
+        }
+      ],
+      &quot;addressDetail&quot;: {
+        &quot;street&quot;: &quot;RUA PERNAMBUCO&quot;,
+        &quot;number&quot;: &quot;93&quot;,
+        &quot;neighborhood&quot;: &quot;GONZAGA&quot;,
+        &quot;complement&quot;: &quot;apt 141b&quot;,
+        &quot;city&quot;: &quot;SANTOS&quot;,
+        &quot;state&quot;: &quot;SP&quot;,
+        &quot;zipCode&quot;: &quot;11065-050&quot;,
+        &quot;countryCode&quot;: &quot;BR&quot;
+      },
+      &quot;documentDetail&quot;: {
+        &quot;type&quot;: &quot;CPF&quot;,
+        &quot;number&quot;: &quot;76892051006&quot;,
+        &quot;nationality&quot;: &quot;BR&quot;
+      }
+    }
+  }
+}</pre></div></div><div class="content-block"><h5>Responses</h5><div class="resp"><div style="margin-bottom:8px;"><span class="badge ok">200</span> <span style="margin-left:8px;">Análise realizada com sucesso</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>id</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>1</td></tr><tr><td><code>cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>person_document</code></td><td>string</td><td>Sim</td><td>Documento do parceiro/cliente, preferencialmente sem máscara</td><td>&quot;12345678900&quot;</td></tr><tr><td><code>max_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>accepted_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>available_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>used_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>0.0</td></tr><tr><td><code>status_code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;PRE_APPROVED&quot;</td></tr><tr><td><code>offer_date</code></td><td>string (date)</td><td>Sim</td><td></td><td>&quot;2026-01-01&quot;</td></tr><tr><td><code>effective_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-01-02&quot;</td></tr><tr><td><code>expiration_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-02-01&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td></td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td>Identificador de rastreamento gerado no KDE</td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr><tr><td><code>id_user_ifood</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>968</td></tr><tr><td><code>global_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>consigned_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>500.99</td></tr><tr><td><code>international_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_installation_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_total_installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>global_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>fidelity_points_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>200.99</td></tr><tr><td><code>international_purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr></tbody></table><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;id&quot;: 1,
+  &quot;cluster&quot;: &quot;IFOOD_BNPL&quot;,
+  &quot;person_document&quot;: &quot;12345678900&quot;,
+  &quot;max_limit&quot;: 1000.99,
+  &quot;accepted_limit&quot;: null,
+  &quot;available_limit&quot;: null,
+  &quot;used_limit&quot;: 0.0,
+  &quot;status_code&quot;: &quot;PRE_APPROVED&quot;,
+  &quot;offer_date&quot;: &quot;2026-01-01&quot;,
+  &quot;effective_date&quot;: null,
+  &quot;expiration_date&quot;: null,
+  &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;,
+  &quot;kde_tracking_id&quot;: &quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;,
+  &quot;id_user_ifood&quot;: 968,
+  &quot;global_limit&quot;: 1000.99,
+  &quot;purchase_limit&quot;: 1000.99,
+  &quot;total_installments_limit&quot;: 1200.99,
+  &quot;installment_limit&quot;: 1200.99,
+  &quot;global_withdraw_limit&quot;: 1000.99,
+  &quot;period_withdraw_limit&quot;: 1000.99,
+  &quot;consigned_limit&quot;: 500.99,
+  &quot;international_purchase_limit&quot;: 1000.99,
+  &quot;international_installation_purchase_limit&quot;: 1200.99,
+  &quot;international_total_installment_limit&quot;: 1200.99,
+  &quot;international_global_withdraw_limit&quot;: 1000.99,
+  &quot;international_period_withdraw_limit&quot;: 1000.99,
+  &quot;global_available_funds&quot;: 1000.99,
+  &quot;purchase_available_funds&quot;: 1000.99,
+  &quot;total_installments_available_funds&quot;: 1200.99,
+  &quot;installments_available_funds&quot;: 1200.99,
+  &quot;withdraw_available_funds&quot;: 1200.99,
+  &quot;fidelity_points_funds&quot;: 200.99,
+  &quot;international_purchase_available_funds&quot;: 1000.99,
+  &quot;international_withdraw_available_funds&quot;: 1000.99
+}</pre></div></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">400</span> <span style="margin-left:8px;">Payload inválido</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">422</span> <span style="margin-left:8px;">Dados insuficientes ou inválidos para análise</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">500</span> <span style="margin-left:8px;">Erro interno inesperado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div></div></section>
+    <section class="endpoint" id="post-v1-webhooks-koin-credit-limit-acceptance">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="path">/v1/webhooks/koin/credit-limit-acceptance</span>
+        <div class="summary">Ifood -&gt; Koin: Webhook Recebe confirmação de aceite de limite</div>
+        <div class="desc">Endpoint chamado pelo iFood para informar que o cliente aceitou o limite ofertado.
+O payload contém o identificador interno do limite e o valor aceito pelo cliente.
+Após o recebimento, a requisição é encaminhada para processamento assíncrono via SQS.</div>
+      </div>
+    <div class="content-block"><h5>Request</h5><div class="schema-box"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>limit_id</code></td><td>integer (int64)</td><td>Sim</td><td>Identificador interno do limite</td><td>1</td></tr><tr><td><code>accepted_limit</code></td><td>number (double)</td><td>Sim</td><td>Valor aceito pelo cliente</td><td></td></tr><tr><td><code>accepted_at</code></td><td>string (date-time), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Sim</td><td></td><td></td></tr></tbody></table></div><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;limit_id&quot;: 1,
+  &quot;accepted_limit&quot;: 1000.99,
+  &quot;accepted_at&quot;: &quot;2026-04-22T14:30:00Z&quot;,
+  &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;
+}</pre></div></div><div class="content-block"><h5>Responses</h5><div class="resp"><div style="margin-bottom:8px;"><span class="badge ok">202</span> <span style="margin-left:8px;">Requisição aceita para processamento assíncrono</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Request accepted for asynchronous processing&quot;</td></tr><tr><td><code>status</code></td><td>string</td><td>Sim</td><td></td><td>&quot;ACCEPTED&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr></tbody></table><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;message&quot;: &quot;Request accepted for asynchronous processing&quot;,
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;,
+  &quot;kde_tracking_id&quot;: &quot;1b5b3c44-2f5e-4c88-9d2a-7f9c1e2a8b22&quot;
+}</pre></div></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">400</span> <span style="margin-left:8px;">Payload inválido</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">404</span> <span style="margin-left:8px;">Limite não encontrado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">409</span> <span style="margin-left:8px;">Conflito de estado ou aceite já processado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">422</span> <span style="margin-left:8px;">Requisição semanticamente inválida</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">500</span> <span style="margin-left:8px;">Erro interno inesperado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div></div></section>
+    <section class="endpoint" id="post-v1-webhooks-ifood-tem-que-criar-uma-api-credit-limit-acceptance">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="path">/v1/webhooks/ifood_tem_que_criar_uma_api/credit-limit-acceptance</span>
+        <div class="summary">Koin -&gt; Ifood: JOB - Webhook recálculo de limite de crédito</div>
+        <div class="desc">Endpoint utilizado pelo fluxo interno da Koin para enviar ao iFood o estado completo
+do limite de crédito recalculado.
 
----
+O payload contém todos os dados consolidados do limite (partner_limit + limites operacionais),
+permitindo que o iFood atualize sua base e siga com o fluxo de notificação ao cliente.
 
-## Incrementos e direções propostas
-
-### Mecânicas de gamificação aplicáveis a código
-
-A ideia ganha força quando você mapeia conceitos de código para mecânicas de jogo específicas, não só "adicionar pontos":
-
-- **Quest system**: cada fluxo de negócio (ex: "processar pagamento PIX") vira uma missão com objetivo, pré-requisitos e recompensa de conhecimento ao final
-- **Skill tree**: dependências entre microserviços viram uma árvore de habilidades que o "jogador" desbloqueia na ordem correta
-- **Boss fights**: pontos críticos do código (transações distribuídas, race conditions, circuit breakers) viram chefes com "mecânicas" que você precisa entender para derrotar
-- **NPCs**: cada serviço/classe importante vira um personagem com personalidade, falas e função no "mundo"
-- **Dungeons**: fluxos end-to-end (ex: checkout BNPL) viram masmorras com salas sequenciais representando cada etapa
-
-### Camadas de audiência
-
-"Qualquer pessoa" é ambicioso. Sugestão: três níveis de profundidade no mesmo material.
-
-1. **Modo história** (não-técnico): metáforas puras, foco no "porquê" e no fluxo de valor
-2. **Modo aventureiro** (dev júnior/onboarding): mistura narrativa com trechos de código reais
-3. **Modo speedrun** (dev sênior): atalhos diretos para arquitetura, decisões técnicas e trade-offs
-
-### Geração automatizada
-
-Pipeline com Claude Code + MCPs:
-
-- Parser AST extrai estrutura (classes, endpoints, dependências)
-- Claude gera narrativa a partir de PRDs + código + comentários
-- Output em formato jogável (Twine, Ink, ou MDX custom com componentes React)
-- Atualização incremental via git hooks quando o código muda
-
----
-
-## Decisões tomadas
-
-- **Escopo inicial**: uso interno na Koin, com potencial de virar side project se der certo
-- **Piloto**: um projeto da Koin atualmente em desenvolvimento
-- **Formato de saída**: web interativa
-
----
-
-## Formato de saída — recomendação
-
-Web interativa é a escolha certa para adoção ampla, **mas não deve ser um "jogo" de verdade**. Deve ser uma **documentação com camadas interativas**.
-
-- **Jogo real** (Godot, Phaser, Visual Novel engine): alta fricção, parece brinquedo, difícil de manter, dev sênior abandona em 30 segundos
-- **Doc interativo gamificado** (MDX + React + componentes narrativos): baixa fricção, roda no navegador, versionável em git, escalável
-
-Referência mental: **"But what is a Neural Network?" do 3Blue1Brown + "Learn You a Haskell" + Docusaurus**. Não é um jogo — é documentação que usa progressão, personagens e descoberta como *técnicas pedagógicas*.
-
-### Stack proposta
-
-- **Docusaurus ou Nextra** como base (markdown-first, fácil de versionar, devs já conhecem)
-- **MDX** para intercalar narrativa com componentes React
-- Componentes custom tipo `<Quest>`, `<BossFight>`, `<NPC>`, `<CodeReveal>`, `<DecisionPoint>`
-- **Mermaid** para diagramas de arquitetura estilizados como "mapa do mundo"
-- **Shiki** para syntax highlighting com anotações narrativas ("este `if` é a armadilha que o dragão usa")
-- Deploy interno via S3 + CloudFront ou GitHub Pages privado
-
-**Por que isso vira adoção**: o dev sênior consegue `Cmd+F` e achar o que precisa sem passar pela narrativa. O júnior entra no "modo aventureiro". O PM entra no "modo história". Mesmo artefato, três leituras.
-
----
-
-## Universo narrativo sugerido
-
-**"O Reino de Koin"** — uma cidade medieval onde cada microserviço é uma guilda, construção ou personagem:
-
-- PIX → "Mensageiro Instantâneo"
-- BNPL → "Guilda dos Mercadores de Promessas"
-- Circuit breakers → "Guardiões das Muralhas"
-- DLQs → "O Cemitério de Cartas Perdidas"
-
-Consistente com estética dark fantasy medieval e dá coesão entre docs de serviços diferentes.
-
----
-
-## Próximos passos
-
-1. Definir qual projeto da Koin será o piloto
-2. Compartilhar material do projeto (PRD, endpoints principais, fluxo de negócio, estrutura)
-3. Protótipo de **uma única página MDX** com 2-3 componentes custom, mostrando como ficaria o primeiro "capítulo"
-4. A partir do feedback, definir template reutilizável e pipeline de geração
-
-### Material necessário para o protótipo
-
-- Estrutura do projeto (camadas, pacotes principais)
-- Fluxo de negócio principal (ponta a ponta)
-- Endpoints ou casos de uso centrais
-- Documentação existente (PRD, README, ADRs)
-
-### Formas de compartilhar
-
-- Conectar GitHub via configurações de conectores do Claude
-- Colar código/estrutura diretamente no chat
-- Upload de arquivos no chat
+O processamento é assíncrono, com envio via integração (webhook/SQS).</div>
+      </div>
+    <div class="content-block"><h5>Request</h5><div class="schema-box"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>id</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>1</td></tr><tr><td><code>cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>person_document</code></td><td>string</td><td>Sim</td><td>Documento do parceiro/cliente, preferencialmente sem máscara</td><td>&quot;12345678900&quot;</td></tr><tr><td><code>max_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>accepted_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>available_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>used_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>0.0</td></tr><tr><td><code>status_code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;PRE_APPROVED&quot;</td></tr><tr><td><code>offer_date</code></td><td>string (date)</td><td>Sim</td><td></td><td>&quot;2026-01-01&quot;</td></tr><tr><td><code>effective_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-01-02&quot;</td></tr><tr><td><code>expiration_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-02-01&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td></td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td>Identificador de rastreamento gerado no KDE</td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr><tr><td><code>id_user_ifood</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>968</td></tr><tr><td><code>global_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>consigned_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>500.99</td></tr><tr><td><code>international_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_installation_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_total_installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>global_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>fidelity_points_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>200.99</td></tr><tr><td><code>international_purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr></tbody></table></div><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;id&quot;: 1,
+  &quot;cluster&quot;: &quot;IFOOD_BNPL&quot;,
+  &quot;person_document&quot;: &quot;12345678900&quot;,
+  &quot;max_limit&quot;: 1000.99,
+  &quot;accepted_limit&quot;: null,
+  &quot;available_limit&quot;: null,
+  &quot;used_limit&quot;: 0,
+  &quot;status_code&quot;: &quot;PENDING_NOTIFICATION&quot;,
+  &quot;offer_date&quot;: &quot;2026-01-01&quot;,
+  &quot;effective_date&quot;: null,
+  &quot;expiration_date&quot;: null,
+  &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;,
+  &quot;kde_tracking_id&quot;: &quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;,
+  &quot;id_user_ifood&quot;: 968,
+  &quot;global_limit&quot;: 1000.99,
+  &quot;purchase_limit&quot;: 1000.99,
+  &quot;total_installments_limit&quot;: 1200.99,
+  &quot;installment_limit&quot;: 1200.99,
+  &quot;global_withdraw_limit&quot;: 1000.99,
+  &quot;period_withdraw_limit&quot;: 1000.99,
+  &quot;consigned_limit&quot;: 500.99,
+  &quot;international_purchase_limit&quot;: 1000.99,
+  &quot;international_installation_purchase_limit&quot;: 1200.99,
+  &quot;international_total_installment_limit&quot;: 1200.99,
+  &quot;international_global_withdraw_limit&quot;: 1000.99,
+  &quot;international_period_withdraw_limit&quot;: 1000.99,
+  &quot;global_available_funds&quot;: 1000.99,
+  &quot;purchase_available_funds&quot;: 1000.99,
+  &quot;total_installments_available_funds&quot;: 1200.99,
+  &quot;installments_available_funds&quot;: 1200.99,
+  &quot;withdraw_available_funds&quot;: 1200.99,
+  &quot;fidelity_points_funds&quot;: 200.99,
+  &quot;international_purchase_available_funds&quot;: 1000.99,
+  &quot;international_withdraw_available_funds&quot;: 1000.99
+}</pre></div></div><div class="content-block"><h5>Responses</h5><div class="resp"><div style="margin-bottom:8px;"><span class="badge ok">202</span> <span style="margin-left:8px;">Requisição aceita para envio ao iFood</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Request accepted for asynchronous processing&quot;</td></tr><tr><td><code>status</code></td><td>string</td><td>Sim</td><td></td><td>&quot;ACCEPTED&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr></tbody></table><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;message&quot;: &quot;Request accepted for asynchronous processing&quot;,
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;external_id&quot;: &quot;7e7cb8b2-8d5c-4ab7-a7ae-7b8bb4f41345&quot;,
+  &quot;kde_tracking_id&quot;: &quot;7a7cb8b2-8d5c-4ab7-a7ae-7b8bb4f41345&quot;
+}</pre></div></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">400</span> <span style="margin-left:8px;">Payload inválido</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">404</span> <span style="margin-left:8px;">Cliente ou limite não encontrado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">422</span> <span style="margin-left:8px;">Não foi possível solicitar o recálculo do limite</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">502</span> <span style="margin-left:8px;">Falha na integração com o iFood</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">500</span> <span style="margin-left:8px;">Erro interno inesperado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div></div></section>
+    <section class="endpoint" id="get-v1-credit-limit">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="path">/v1/credit-limit</span>
+        <div class="summary">Consulta limite por identificador do limite</div>
+        <div class="desc">Retorna os dados completos do limite utilizando o identificador interno do limite.</div>
+      </div>
+    <div class="content-block"><h5>Responses</h5><div class="resp"><div style="margin-bottom:8px;"><span class="badge ok">200</span> <span style="margin-left:8px;">Limite encontrado com sucesso</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>id</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>1</td></tr><tr><td><code>cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>person_document</code></td><td>string</td><td>Sim</td><td>Documento do parceiro/cliente, preferencialmente sem máscara</td><td>&quot;12345678900&quot;</td></tr><tr><td><code>max_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>accepted_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>available_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>used_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>0.0</td></tr><tr><td><code>status_code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;PRE_APPROVED&quot;</td></tr><tr><td><code>offer_date</code></td><td>string (date)</td><td>Sim</td><td></td><td>&quot;2026-01-01&quot;</td></tr><tr><td><code>effective_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-01-02&quot;</td></tr><tr><td><code>expiration_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-02-01&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td></td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td>Identificador de rastreamento gerado no KDE</td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr><tr><td><code>id_user_ifood</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>968</td></tr><tr><td><code>global_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>consigned_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>500.99</td></tr><tr><td><code>international_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_installation_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_total_installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>global_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>fidelity_points_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>200.99</td></tr><tr><td><code>international_purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr></tbody></table><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;id&quot;: 1,
+  &quot;person_document&quot;: &quot;12345678900&quot;,
+  &quot;max_limit&quot;: 1000.99,
+  &quot;accepted_limit&quot;: 1000.99,
+  &quot;available_limit&quot;: 1000.99,
+  &quot;used_limit&quot;: 0.0,
+  &quot;status_code&quot;: &quot;ACTIVE&quot;,
+  &quot;offer_date&quot;: &quot;2026-01-01&quot;,
+  &quot;effective_date&quot;: &quot;2026-01-02&quot;,
+  &quot;expiration_date&quot;: &quot;2026-02-01&quot;,
+  &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;,
+  &quot;kde_tracking_id&quot;: &quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;,
+  &quot;id_user_ifood&quot;: 968,
+  &quot;global_limit&quot;: 1000.99,
+  &quot;purchase_limit&quot;: 1000.99,
+  &quot;total_installments_limit&quot;: 1200.99,
+  &quot;installment_limit&quot;: 1200.99,
+  &quot;global_withdraw_limit&quot;: 1000.99,
+  &quot;period_withdraw_limit&quot;: 1000.99,
+  &quot;consigned_limit&quot;: 500.99,
+  &quot;international_purchase_limit&quot;: 1000.99,
+  &quot;international_installation_purchase_limit&quot;: 1200.99,
+  &quot;international_total_installment_limit&quot;: 1200.99,
+  &quot;international_global_withdraw_limit&quot;: 1000.99,
+  &quot;international_period_withdraw_limit&quot;: 1000.99,
+  &quot;global_available_funds&quot;: 1000.99,
+  &quot;purchase_available_funds&quot;: 1000.99,
+  &quot;total_installments_available_funds&quot;: 1200.99,
+  &quot;installments_available_funds&quot;: 1200.99,
+  &quot;withdraw_available_funds&quot;: 1200.99,
+  &quot;fidelity_points_funds&quot;: 200.99,
+  &quot;international_purchase_available_funds&quot;: 1000.99,
+  &quot;international_withdraw_available_funds&quot;: 1000.99
+}</pre></div></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">400</span> <span style="margin-left:8px;">Parâmetro inválido</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">404</span> <span style="margin-left:8px;">Limite não encontrado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">500</span> <span style="margin-left:8px;">Erro interno inesperado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div></div></section>
+    <section class="endpoint" id="post-v1-webhooks-koin-recalculation-confirmation">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="path">/v1/webhooks/koin/recalculation-confirmation</span>
+        <div class="summary">Ifood -&gt; Koin: Confirma o recálculo de limite</div>
+        <div class="desc">Endpoint chamado para confirmar o resultado do recálculo de limite entre iFood e Koin.
+A confirmação é recebida e encaminhada para processamento assíncrono via SQS.</div>
+      </div>
+    <div class="content-block"><h5>Request</h5><div class="schema-box"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td>Identificador de rastreabilidade da operação</td><td>&quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;</td></tr><tr><td><code>limit_id</code></td><td>integer (int64)</td><td>Sim</td><td>Identificador do registro de limite</td><td>1</td></tr><tr><td><code>confirmed_limit</code></td><td>number (double)</td><td>Sim</td><td>Valor final confirmado após o recálculo</td><td>650.0</td></tr><tr><td><code>status_code</code></td><td>string enum[CONFIRMED, REJECTED, PENDING_EFFECTIVE_DATE, ACTIVE]</td><td>Sim</td><td>Status resultante da confirmação do recálculo</td><td>&quot;CONFIRMED&quot;</td></tr><tr><td><code>effective_date</code></td><td>string (date), nullable</td><td>Não</td><td>Data em que o novo limite confirmado entra em vigor</td><td>&quot;2026-05-01&quot;</td></tr><tr><td><code>confirmed_at</code></td><td>string (date-time), nullable</td><td>Não</td><td>Data/hora da confirmação</td><td>&quot;2026-04-23T12:00:00Z&quot;</td></tr><tr><td><code>source</code></td><td>string, nullable enum[IFOOD, KOIN, SYSTEM]</td><td>Não</td><td>Origem da confirmação</td><td>&quot;IFOOD&quot;</td></tr></tbody></table></div><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;external_id&quot;: &quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;,
+  &quot;limit_id&quot;: 1,
+  &quot;confirmed_limit&quot;: 650.0,
+  &quot;status_code&quot;: &quot;CONFIRMED&quot;,
+  &quot;effective_date&quot;: &quot;2026-05-01&quot;,
+  &quot;confirmed_at&quot;: &quot;2026-04-23T12:00:00Z&quot;,
+  &quot;source&quot;: &quot;IFOOD&quot;
+}</pre></div></div><div class="content-block"><h5>Responses</h5><div class="resp"><div style="margin-bottom:8px;"><span class="badge ok">202</span> <span style="margin-left:8px;">Requisição aceita para processamento assíncrono</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Request accepted for asynchronous processing&quot;</td></tr><tr><td><code>status</code></td><td>string</td><td>Sim</td><td></td><td>&quot;ACCEPTED&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr></tbody></table><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;message&quot;: &quot;Request accepted for asynchronous processing&quot;,
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;external_id&quot;: &quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;,
+  &quot;kde_tracking_id&quot;: &quot;2d4b4c5d-12ab-4f67-90c1-22d9a8d2e999&quot;
+}</pre></div></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">400</span> <span style="margin-left:8px;">Payload inválido</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">404</span> <span style="margin-left:8px;">Limite não encontrado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">409</span> <span style="margin-left:8px;">Confirmação já processada ou conflito de estado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">422</span> <span style="margin-left:8px;">Violação de regra de negócio</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">500</span> <span style="margin-left:8px;">Erro interno inesperado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div></div></section>
+    <section class="endpoint" id="post-v1-webhooks-ifood-tem-que-criar-uma-api-new-credit-applied">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="path">/v1/webhooks/ifood_tem_que_criar_uma_api/new-credit-applied</span>
+        <div class="summary">Ifood -&gt; Koin: Webhook de aceite de novo limite aplicado</div>
+        <div class="desc">Endpoint chamado pelo iFood para informar o aceite de um novo limite aplicado.
+A requisição é recebida e encaminhada para processamento assíncrono via SQS.</div>
+      </div>
+    <div class="content-block"><h5>Request</h5><div class="schema-box"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>limit_id</code></td><td>integer (int64)</td><td>Sim</td><td>Identificador interno do limite</td><td>1</td></tr><tr><td><code>accepted_limit</code></td><td>number (double)</td><td>Sim</td><td>Valor aceito pelo cliente</td><td></td></tr><tr><td><code>accepted_at</code></td><td>string (date-time), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Sim</td><td></td><td></td></tr></tbody></table></div><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;limit_id&quot;: 1,
+  &quot;accepted_limit&quot;: 1000.99,
+  &quot;accepted_at&quot;: &quot;2026-04-22T14:30:00Z&quot;,
+  &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;
+}</pre></div></div><div class="content-block"><h5>Responses</h5><div class="resp"><div style="margin-bottom:8px;"><span class="badge ok">202</span> <span style="margin-left:8px;">Requisição aceita para processamento assíncrono</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Request accepted for asynchronous processing&quot;</td></tr><tr><td><code>status</code></td><td>string</td><td>Sim</td><td></td><td>&quot;ACCEPTED&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr></tbody></table><div style="margin-top:12px;"><div class="small" style="margin-bottom:8px;">Exemplo JSON</div><pre>{
+  &quot;message&quot;: &quot;Request accepted for asynchronous processing&quot;,
+  &quot;status&quot;: &quot;ACCEPTED&quot;,
+  &quot;external_id&quot;: &quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;,
+  &quot;kde_tracking_id&quot;: &quot;3e31bb63-bd50-46c0-943b-85c6705d2a1e&quot;
+}</pre></div></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">400</span> <span style="margin-left:8px;">Payload inválido</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">404</span> <span style="margin-left:8px;">Limite não encontrado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">409</span> <span style="margin-left:8px;">Conflito de estado ou aceite já processado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">422</span> <span style="margin-left:8px;">Requisição semanticamente inválida</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div><div class="resp"><div style="margin-bottom:8px;"><span class="badge err">500</span> <span style="margin-left:8px;">Erro interno inesperado</span></div><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div></div></section><h3 class="section-title">Schemas</h3><section class="endpoint" id="schema-creditlimitanalysisrequest"><div class="endpoint-header"><div class="path">CreditLimitAnalysisRequest</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>payload</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.external_id</code></td><td>string (uuid)</td><td>Sim</td><td>Identificador externo/correlação da operação no parceiro</td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>payload.cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>payload.device</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.device.ipv4</code></td><td>string</td><td>Sim</td><td></td><td>&quot;191.68.161.66&quot;</td></tr><tr><td><code>payload.device.location</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.device.location.latitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.device.location.longitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.device.merchantDevice</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.details</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.email</code></td><td>string (email)</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.firstName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.lastName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate.day</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate.month</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.birthDate.year</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.phoneDetail</code></td><td>array</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.phoneDetail[].type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;MOBILE&quot;</td></tr><tr><td><code>payload.details.phoneDetail[].areaCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11&quot;</td></tr><tr><td><code>payload.details.phoneDetail[].number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;983764789&quot;</td></tr><tr><td><code>payload.details.addressDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.street</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.number</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.neighborhood</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.complement</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.city</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.addressDetail.state</code></td><td>string</td><td>Sim</td><td></td><td>&quot;SP&quot;</td></tr><tr><td><code>payload.details.addressDetail.zipCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11065-050&quot;</td></tr><tr><td><code>payload.details.addressDetail.countryCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr><tr><td><code>payload.details.documentDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>payload.details.documentDetail.type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;CPF&quot;</td></tr><tr><td><code>payload.details.documentDetail.number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;76892051006&quot;</td></tr><tr><td><code>payload.details.documentDetail.nationality</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-payload"><div class="endpoint-header"><div class="path">Payload</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td>Identificador externo/correlação da operação no parceiro</td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>device</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>device.ipv4</code></td><td>string</td><td>Sim</td><td></td><td>&quot;191.68.161.66&quot;</td></tr><tr><td><code>device.location</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>device.location.latitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>device.location.longitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>device.merchantDevice</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>details</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.email</code></td><td>string (email)</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.firstName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.lastName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.birthDate</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.birthDate.day</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.birthDate.month</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.birthDate.year</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.phoneDetail</code></td><td>array</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.phoneDetail[].type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;MOBILE&quot;</td></tr><tr><td><code>details.phoneDetail[].areaCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11&quot;</td></tr><tr><td><code>details.phoneDetail[].number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;983764789&quot;</td></tr><tr><td><code>details.addressDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.addressDetail.street</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.addressDetail.number</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.addressDetail.neighborhood</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.addressDetail.complement</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>details.addressDetail.city</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.addressDetail.state</code></td><td>string</td><td>Sim</td><td></td><td>&quot;SP&quot;</td></tr><tr><td><code>details.addressDetail.zipCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11065-050&quot;</td></tr><tr><td><code>details.addressDetail.countryCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr><tr><td><code>details.documentDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>details.documentDetail.type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;CPF&quot;</td></tr><tr><td><code>details.documentDetail.number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;76892051006&quot;</td></tr><tr><td><code>details.documentDetail.nationality</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-device"><div class="endpoint-header"><div class="path">Device</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>ipv4</code></td><td>string</td><td>Sim</td><td></td><td>&quot;191.68.161.66&quot;</td></tr><tr><td><code>location</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>location.latitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>location.longitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>merchantDevice</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr></tbody></table></div></section><section class="endpoint" id="schema-location"><div class="endpoint-header"><div class="path">Location</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>latitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>longitude</code></td><td>number (double), nullable</td><td>Não</td><td></td><td></td></tr></tbody></table></div></section><section class="endpoint" id="schema-details"><div class="endpoint-header"><div class="path">Details</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>email</code></td><td>string (email)</td><td>Sim</td><td></td><td></td></tr><tr><td><code>firstName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>lastName</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>birthDate</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>birthDate.day</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>birthDate.month</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>birthDate.year</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>phoneDetail</code></td><td>array</td><td>Sim</td><td></td><td></td></tr><tr><td><code>phoneDetail[].type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;MOBILE&quot;</td></tr><tr><td><code>phoneDetail[].areaCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11&quot;</td></tr><tr><td><code>phoneDetail[].number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;983764789&quot;</td></tr><tr><td><code>addressDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>addressDetail.street</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>addressDetail.number</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>addressDetail.neighborhood</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>addressDetail.complement</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>addressDetail.city</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>addressDetail.state</code></td><td>string</td><td>Sim</td><td></td><td>&quot;SP&quot;</td></tr><tr><td><code>addressDetail.zipCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11065-050&quot;</td></tr><tr><td><code>addressDetail.countryCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr><tr><td><code>documentDetail</code></td><td>object</td><td>Sim</td><td></td><td></td></tr><tr><td><code>documentDetail.type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;CPF&quot;</td></tr><tr><td><code>documentDetail.number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;76892051006&quot;</td></tr><tr><td><code>documentDetail.nationality</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-birthdate"><div class="endpoint-header"><div class="path">BirthDate</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>day</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>month</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr><tr><td><code>year</code></td><td>integer</td><td>Sim</td><td></td><td></td></tr></tbody></table></div></section><section class="endpoint" id="schema-phonedetail"><div class="endpoint-header"><div class="path">PhoneDetail</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;MOBILE&quot;</td></tr><tr><td><code>areaCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11&quot;</td></tr><tr><td><code>number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;983764789&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-addressdetail"><div class="endpoint-header"><div class="path">AddressDetail</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>street</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>number</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>neighborhood</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>complement</code></td><td>string, nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>city</code></td><td>string</td><td>Sim</td><td></td><td></td></tr><tr><td><code>state</code></td><td>string</td><td>Sim</td><td></td><td>&quot;SP&quot;</td></tr><tr><td><code>zipCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;11065-050&quot;</td></tr><tr><td><code>countryCode</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-documentdetail"><div class="endpoint-header"><div class="path">DocumentDetail</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>type</code></td><td>string</td><td>Sim</td><td></td><td>&quot;CPF&quot;</td></tr><tr><td><code>number</code></td><td>string</td><td>Sim</td><td></td><td>&quot;76892051006&quot;</td></tr><tr><td><code>nationality</code></td><td>string</td><td>Sim</td><td></td><td>&quot;BR&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-partnerlimitbase"><div class="endpoint-header"><div class="path">PartnerLimitBase</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>id</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>1</td></tr><tr><td><code>cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>person_document</code></td><td>string</td><td>Sim</td><td>Documento do parceiro/cliente, preferencialmente sem máscara</td><td>&quot;12345678900&quot;</td></tr><tr><td><code>max_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>accepted_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>available_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>used_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>0.0</td></tr><tr><td><code>status_code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;PRE_APPROVED&quot;</td></tr><tr><td><code>offer_date</code></td><td>string (date)</td><td>Sim</td><td></td><td>&quot;2026-01-01&quot;</td></tr><tr><td><code>effective_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-01-02&quot;</td></tr><tr><td><code>expiration_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-02-01&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td></td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td>Identificador de rastreamento gerado no KDE</td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr><tr><td><code>id_user_ifood</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>968</td></tr></tbody></table></div></section><section class="endpoint" id="schema-creditlimitresponse"><div class="endpoint-header"><div class="path">CreditLimitResponse</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>id</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>1</td></tr><tr><td><code>cluster</code></td><td>string</td><td>Sim</td><td>Identificador do grupo/produto na Dock</td><td>&quot;IFOOD_BNPL&quot;</td></tr><tr><td><code>person_document</code></td><td>string</td><td>Sim</td><td>Documento do parceiro/cliente, preferencialmente sem máscara</td><td>&quot;12345678900&quot;</td></tr><tr><td><code>max_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>accepted_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>available_limit</code></td><td>number (double), nullable</td><td>Não</td><td></td><td>1000.99</td></tr><tr><td><code>used_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>0.0</td></tr><tr><td><code>status_code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;PRE_APPROVED&quot;</td></tr><tr><td><code>offer_date</code></td><td>string (date)</td><td>Sim</td><td></td><td>&quot;2026-01-01&quot;</td></tr><tr><td><code>effective_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-01-02&quot;</td></tr><tr><td><code>expiration_date</code></td><td>string (date), nullable</td><td>Não</td><td></td><td>&quot;2026-02-01&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td></td><td>&quot;9d31bb63-bd50-46c0-943b-85c6705d2a1e&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td>Identificador de rastreamento gerado no KDE</td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr><tr><td><code>id_user_ifood</code></td><td>integer (int64)</td><td>Sim</td><td></td><td>968</td></tr><tr><td><code>global_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>consigned_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>500.99</td></tr><tr><td><code>international_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_installation_purchase_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_total_installment_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>international_global_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_period_withdraw_limit</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>global_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>total_installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>installments_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1200.99</td></tr><tr><td><code>fidelity_points_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>200.99</td></tr><tr><td><code>international_purchase_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr><tr><td><code>international_withdraw_available_funds</code></td><td>number (double)</td><td>Sim</td><td></td><td>1000.99</td></tr></tbody></table></div></section><section class="endpoint" id="schema-creditlimitacceptancerequest"><div class="endpoint-header"><div class="path">CreditLimitAcceptanceRequest</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>limit_id</code></td><td>integer (int64)</td><td>Sim</td><td>Identificador interno do limite</td><td>1</td></tr><tr><td><code>accepted_limit</code></td><td>number (double)</td><td>Sim</td><td>Valor aceito pelo cliente</td><td></td></tr><tr><td><code>accepted_at</code></td><td>string (date-time), nullable</td><td>Não</td><td></td><td></td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Sim</td><td></td><td></td></tr></tbody></table></div></section><section class="endpoint" id="schema-recalculationconfirmationrequest"><div class="endpoint-header"><div class="path">RecalculationConfirmationRequest</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>external_id</code></td><td>string (uuid)</td><td>Sim</td><td>Identificador de rastreabilidade da operação</td><td>&quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;</td></tr><tr><td><code>limit_id</code></td><td>integer (int64)</td><td>Sim</td><td>Identificador do registro de limite</td><td>1</td></tr><tr><td><code>confirmed_limit</code></td><td>number (double)</td><td>Sim</td><td>Valor final confirmado após o recálculo</td><td>650.0</td></tr><tr><td><code>status_code</code></td><td>string enum[CONFIRMED, REJECTED, PENDING_EFFECTIVE_DATE, ACTIVE]</td><td>Sim</td><td>Status resultante da confirmação do recálculo</td><td>&quot;CONFIRMED&quot;</td></tr><tr><td><code>effective_date</code></td><td>string (date), nullable</td><td>Não</td><td>Data em que o novo limite confirmado entra em vigor</td><td>&quot;2026-05-01&quot;</td></tr><tr><td><code>confirmed_at</code></td><td>string (date-time), nullable</td><td>Não</td><td>Data/hora da confirmação</td><td>&quot;2026-04-23T12:00:00Z&quot;</td></tr><tr><td><code>source</code></td><td>string, nullable enum[IFOOD, KOIN, SYSTEM]</td><td>Não</td><td>Origem da confirmação</td><td>&quot;IFOOD&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-genericasyncresponse"><div class="endpoint-header"><div class="path">GenericAsyncResponse</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Request accepted for asynchronous processing&quot;</td></tr><tr><td><code>status</code></td><td>string</td><td>Sim</td><td></td><td>&quot;ACCEPTED&quot;</td></tr><tr><td><code>external_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;0c3b4c5d-12ab-4f67-90c1-22d9a8d2e111&quot;</td></tr><tr><td><code>kde_tracking_id</code></td><td>string (uuid), nullable</td><td>Não</td><td></td><td>&quot;9a1b3c44-2f5e-4c88-9d2a-7f9c1e2a8b11&quot;</td></tr></tbody></table></div></section><section class="endpoint" id="schema-errorresponse"><div class="endpoint-header"><div class="path">ErrorResponse</div></div><div class="content-block"><table><thead><tr><th>Campo</th><th>Tipo</th><th>Obrigatório</th><th>Descrição</th><th>Exemplo</th></tr></thead><tbody><tr><td><code>code</code></td><td>string</td><td>Sim</td><td></td><td>&quot;INVALID_REQUEST&quot;</td></tr><tr><td><code>message</code></td><td>string</td><td>Sim</td><td></td><td>&quot;Payload inválido&quot;</td></tr><tr><td><code>details</code></td><td>array</td><td>Não</td><td></td><td></td></tr></tbody></table></div></section>
+  </main>
+</div>
+</body>
+</html>
